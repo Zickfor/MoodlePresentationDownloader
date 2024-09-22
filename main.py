@@ -27,9 +27,8 @@ def img_converter_to_pdf(dirname):
 
 def download_presentation(url):
     driver.get(url)
-    element_present = EC.presence_of_element_located((By.CLASS_NAME, 'usertext'))
-    WebDriverWait(driver, 5).until(element_present)
-    title = driver.find_element(By.TAG_NAME, "h2")
+    WebDriverWait(driver, 5)
+    title = driver.find_element(By.TAG_NAME, "h1")
     new_title = re.sub(r'[^\w]', ' ', title.text)
     if not os.path.exists(new_title):
         os.mkdir(new_title)
@@ -45,7 +44,7 @@ def download_presentation(url):
         if current_page == last_page:
             break
         next_button = driver.find_elements(By.TAG_NAME, "svg")
-        next_button[2].click()
+        next_button[1].click()
     img_converter_to_pdf(new_title)
     shutil.rmtree(new_title)
 
@@ -84,11 +83,10 @@ if __name__ == "__main__":
     login = driver.find_element(By.ID, "loginbtn")
     login.click()
 
-    element_present = EC.presence_of_element_located((By.CLASS_NAME, 'usertext'))
-    WebDriverWait(driver, 5).until(element_present)
+    WebDriverWait(driver, 5)
 
     for pres in config["urls"]:
         print(pres)
         download_presentation(pres)
 
-    driver.close()
+    driver.quit()
